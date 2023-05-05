@@ -1,0 +1,486 @@
+Anthony Lynch 
+IT341 - Intro to System Administration 
+report_02
+Project 2 Configuring and Using a LAN.
+Partner: Manny Dolce
+
+---------------------------------------------
+2022-03-03 -- Project 2 Begins:
+---------------------------------------------
+
++ My partner and I started on project 2 after the professor's lecture on 
+security. Before we got started o the preliminary steps for project 2, we ran 
+a command to specify the text file that we named Project2.txt.
+
++ After this we began running the codes necessary to fulfill the preliminary 
+steps. On step "g" during this process, we were able to confirm that we have 
+both ens33 lo after running the following command:
+	ip addr show
+	~ This command was executed successfully.
+
++ On step "I", after accessing the file, there were no prior comments in the nano
+file, therefore we had to add the following contents to the nano file: 
+	auto lo
+	iface lo inet loopback
+	auto ens33
+	iface ens33 inet dhcp
+	~ This command was executed successfully.
+
++ After running "sudo reboot", it stopped our script that was saving our 
+outputs. Before we continued, my partner and I reran a second script to save 
+the CLI outputs, named; project2_pt2.txt. 
+
++ After this the class period had finished, however, we continued until we
+finished the primary part 1 Tasks. During this process we got stuck on step 4, 
+however, we figured it out with the professor's help. We used PowerShell and 
+notepad to copy and paste the 64 lines of code in groups of 16 because the 
+machine can only handle that amount at a time. We did this for a total of 64 
+lines. 
+	- We ended at step 4 where we logged out of our VM and shut it down. 
+
+														------END OF CLASS------
+
+
+---------------------------------------------
+2022-03-24 -- Project 2 Continued:
+---------------------------------------------
+
+
++ Proceeding after spring break, we continued where we had left off which was 
+on step 5 of the preliminary task. Following this, we changed our network settings 
+so that they bridge which connects us directly to the physical network.
+
++ After this occurrence, within the same dialog box we changed our mac address 
+as stated in the instructions. 
+	- We were unable to change the letters in the MAC address to lowercase as 
+	seen in the instructions
+
++ With our new MAC, we powered up the machine once again. Before continuing 
+we ran a script called project2_continued.txt where we could continue to save all 
+of our outputs. 
+
++ After a command that copied the interfaces file into our directory.
+	- Then we edited the interfaces file as stated and input the IP address 
+	  for our machine.
+	sudo cp /etc/network/interfaces /etc/network/interfaces.saved
+	~ This command was executed sucessfully.
+
++ We could not ssh into some other VMS since we did not have the proper 
+credentials. 
+
++ Now we have completed part 1 of project 2 leaving us at step 14; shutting down,
+or logging off the machine. 
+
+														------END OF CLASS------
+
+
+---------------------------------------------
+2022-04-05 -- Project 2 Continued:
+---------------------------------------------
++ From this point on we both were able to remotely connect to our virtual machine
+as long as we keep it running in the lab. We can do this by running the following
+commands and entering in the passwords; 
+	ssh it341@10.200.6.58
+	Unix password: 
+	ssh sysadmin@itvm25-2b
+	yes
+	sysadmin password:
+	~ This command was executed successfully.
+
+	sudo apt-get update
+	~ This command was executed successfully.
+
+	sudo apt-get install nis
+	~ This command was executed successfully.
+
++ Following the instructions, next we needed to download and install NIS. To do 
+this we stared by getting the right apt repositories by runniing the following;
+	sudo scp it341@10.0.0.1:/home/ckelly/it341_files/sources.list 
+	/etc/apt/sources.list
+	~ This command was executed sucessfully.
+
++ The file located in /etc/nsswitch.conf also needed to be changed. To do this 
+we ran... 
+	sudo nano /etc/nsswitch.conf
+	~ This command was executed successfully.
+
+	Then added the following content;
+	passwd: files systemd nis
+	group: files systemd nis
+	shadow: files nis
+	gshadow: files
+	hosts: dns files nis
+
++ On the virtual machine we also needed to add a home directory for my partner 
+and I. We did this by running the following command; 
+	sudo mkdir /home/aj092000
+
++ Next, we saw the professor, on the it20 side to add a new user  account. He 
+ran the following commands to do so; 
+	sudo adduser --no-create-home aj092000
+	cd /var/yp
+	sudo make
+	sudo sysv-rc-conf ypbind on
+
++ Once this was accomplished we used su sysadmin, to exit from sysadmin's 
+the session, and land back in the session with my individual account thus, 
+completing project 2.
+
+														------END OF CLASS------
+
+
+
+---------------------------------------------
+2022-04-21 -- Continue - DISCUSSION Q&A:
+---------------------------------------------
+
+1. What is the IP address of the gateway server...
+	- For your virtual machine?
+	- For your physical host?
+
+Answer: 
+
++ The IP address of my virtual machine's gateway server is 10.0.0.1. The IP 
+address of my physical host's gateway server is 172.17.0.1
+
+2. What is the IP address...
+	- Of your VM?
+	- Of your physical host?
+
+Answer:
+
++ The IP address of my virtual machine is 10.0.0.159. The IP address of my 
+physical host is 172.17.29.196.
+
+3. Explain how you found out all of these things, for both the VM and the 
+physical host. (NOTE: The /etc/hosts file is not a valid source for answering 
+either of the preceding questions!)
+
+Answer:
+
++ You can find out all of these things by running the following command; 
+arp -a
+
+4. What is DHCP, and why do we use DHCP? Please explain.
+
+Answer:
+
++ Dynamic Host Configuration Protocol (DHCP) is a network management protocol 
+used to automate the process of configuring devices on IP networks, thus 
+allowing them to use network services such as DNS, NTP, and any communication 
+protocol based on UDP or TCP. A DHCP server dynamically assigns an IP address 
+and other network configuration parameters to each device on a network so they
+can communicate with other IP networks.
+Source: https://www.efficientip.com/what-is-dhcp-and-why-is-it-important/
+
+
+5. What is NAT (Network Address Translation), and why do we use it? Please 
+explain.
+
+Answer: 
+
++ It’s a way to map multiple local private addresses to a public one before 
+transferring the information. Whenever we want multiple devices to 
+employ a single IP address, we use NAT. 
+Source: https://www.comptia.org/content/guides/what-is-network-address-
+translation
+
+6. Use Google to search the Internet to find how you can make Ubuntu Server do 
+this NAT and
+implement the required DHCP.
+
+	- Choose the clearest explanation and make a citation of the webpage. 
+	Include as much
+citation information as you can:
+		* Author's name
+		* Article/page name
+		* Date of publication
+		* Name of the overall website
+		* URL for the specific page
+	
+	- I should be able to enter the URL and land directly on the page
+		* At the very least, you should be able to provide a title and URL
+		* The citation itself goes here, as your main answer to question #6.
+		* Copy the text of the article/page/explanation, but you will not paste 
+		it until the very
+	end of your lab report, AFTER your answers to all the other discussion 
+	questions.
+
+Answer:
+
++ Gite, V. (2012, November 21). Ubuntu 12.04 ipv4 nat gateway and DHCP server. 
+Code Ghar. Retrieved April 24, 2022, from 
+https://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp
+-server/ 
+
+7. What is the hosts file, and what does it do?
+
+Answer:
+
++ A Hosts file is a file that almost all computers and operating systems can use
+to map a connection between an IP address and domain names. This file is an 
+ASCII text file. It contains IP addresses separated by a space and then a 
+domain name. Each address gets its own line.
+Source: https://www.zdnet.com/home-and-office/networking/how-to-use-a-hosts-file-to-improve-your-internet-experience/
+
+8. Please define and explain the networking settings of "NAT" and "bridged" 
+in VMWare. In a previous question, you discussed NAT more generally, but now you
+need to discuss it in the context of VMs in VMWare, specifically.
+
+Answer:
+
++ Bridging is a network term that describes extending a network without using a 
+router. When you place your virtual machine's virtual network adapter into 
+bridged mode, your local wired or wireless network is effectively extended to 
+your virtual machine. Your virtual machine becomes a peer of all the other 
+computers on that network. NAT is a network technology that protects one network
+from another. it protects your Mac by preventing unknown computers on the 
+Internet from connecting directly to it.
+Source: https://communities.vmware.com/t5/VMware-Fusion-Documents/Understanding-
+Networking-in-VMware-Fusion/ta-p/2771563
+
+9. Now is a good time to read about – and experiment with – these tools and 
+utilities for network
+troubleshooting:
+	a. ping (again)
+	b. ifconfig
+	c. route
+	d. traceroute
+	e. netstat
+
+Write about these, based upon
+❖ Your reading
+• The Petersen textbook
+• The man pages for each utility
+• Sources found by searching Google
+❖ Your tests/experiments during Project 2.
+
+Answer:
+
++ ping
+Verifies IP-level connectivity to another TCP/IP computer by sending Internet 
+Control Message Protocol (ICMP) echo request messages. The receipt of 
+corresponding echo Reply messages are displayed, along with round-trip times. 
+ping is the primary TCP/IP command used to troubleshoot connectivity, 
+reachability, and name resolution. Used without parameters, this command 
+displays Help content.
+ Source: https://docs.microsoft.com/en-us/windows-server/administration/windows
+-commands/ping
+
++ ifconfig
+Configures or displays network interface parameters for a network by using 
+TCP/IP. You can use the ifconfig command to assign an address to a network 
+interface and to configure or display the current network interface 
+configuration information. The ifconfig command must be used at system startup 
+to define the network address of each interface present on a system. After 
+system startup, it can also be used to redefine an interfaces address and its 
+other operating parameters. The network interface configuration is held on the 
+running system and must be reset at each system restart. The ifconfig command 
+interprets the IFF_MULTICAST flag and prints its value if it is set.
+ Source: https://www.ibm.com/docs/en/aix/7.2?topic=i-ifconfig-command
+
++ route
+Manually manipulates the routing tables. The route command allows you to make 
+manual entries into the network routing tables. The route command distinguishes 
+between routes to hosts and routes to networks by interpreting the network 
+address of the Destination variable, which can be specified either by symbolic 
+name or a numeric address. The route command resolves all symbolic names into 
+addresses, using either the /etc/hosts file or the network name server. 
+ Source: https://www.ibm.com/docs/en/aix/7.2?topic=r-route-command
+
++ traceroute
+The Trace TCP/IP Route (TRCTCPRTE) command, also known as TRACEROUTE, traces the
+route of IP packets to a user-specified destination system. The route can 
+involve many different systems along the way. Each system along the route is 
+referred to as a hop. You can trace all hops along the route or specify the 
+starting and ending hops to be traced. The route is traced by sending packets 
+(called probes) to the destination system. Each probe contains an upper limit 
+(called Time To Live or TTL) on the number of hop systems the probe can pass 
+through. 
+ Source: https://www.ibm.com/docs/en/i/7.3?topic=ssw_ibm_i_73/cl/traceroute.htm
+
+
+10. On your VM, what aspect of the /etc/default/nis file differs from that 
+which was given in the On The Clients section of the second half of Project 2? 
+What does that difference mean, and/or is it significant for our purposes? 
+(NOTE: This question has nothing to do with the /etc/default/nis file on it20, 
+which is another issue entirely.)
+
+Answer:
+
++ On our vm the aspect of the /etc/default/nis file that differs from that 
+which was given in the On The Clients section of the second half of Project 2 
+from the following 2 entries; 
+Started off as NISSERVER=master. After the change it was NISSERVER=false
+
+There are three types of NIS machines; Master servers, Slave servers, and Clients 
+of NIS servers. Any machine can be a NIS client, but only machines with disks 
+should be NIS servers, either master or slave. Servers are also clients, 
+typically of themselves.
+ Source: https://docs.oracle.com/cd/E19253-01/816-4556/anis1-25461/index.html
+
+
+11. The su command: What does "su" stand for, and what is the command's purpose?
+
+Answer: 
+
++ The Unix command su, which stands for 'substitute user' 
+(originally 'superuser'), is used by a computer user to execute commands with 
+the privileges of another user account. When executed it invokes a shell without
+changing the current working directory or the user environment.
+Source: https://en.wikipedia.org/wiki/Su_(Unix)
+
+12. Why do we often need to restart the VM – or at least restart some specific 
+service – after installing some software or making some changes to the config
+
+Answer:
+
++ A restart is required because the task of replacing files cannot be done when 
+they are being used by the operating system or other applications.
+
+
+Question #6. Explanation; 
+
+Answer:
+
++ The setup is simple: a single Ubuntu server will act as a gateway and DHCP 
+server for a local network. All other machines on the local network will receive 
+their IPs from the DHCP server. To make things easier, I’ll call this Ubuntu 
+server “Skyray” for the rest of the post.
+
+Skyray has two network interfaces, eth0, and eth1. eth0 is on the 10.20.30.0/24 
+subnet and this is the Internet-facing interface. eth1 is on the 172.22.22.0/24
+ subnet, where all other machines are also present. Basically, eth0 will connect
+  to the Internet, and eth1 will serve DHCP requests and act as the gateway.
+/etc/network/interfaces
+
+First, you need to configure eth0 and eth1 for Skyray. Edit the file and make 
+sure it has at least the following settings (or whatever settings are 
+appropriate for your environment).
+
+sudo vim /etc/network/interfaces
+
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+    address 10.20.30.77
+    netmask 255.255.255.0
+    gateway 10.20.30.1
+    network 10.20.30.0
+    broadcast 10.20.30.255
+    dns-nameservers 10.20.30.15 10.20.30.16
+    dns-search codeghar.com
+
+auto eth1
+iface eth1 inet static
+    address 172.22.22.1
+    netmask 255.255.255.0
+    network 172.22.22.0
+    broadcast 172.22.22.255
+
+/etc/sysctl.conf
+
+You need to enable IPv4 forwarding. To do so, edit this file.
+
+sudo vim /etc/sysctl.conf
+
+And uncomment the line
+
+# net.ipv4.ip_forward=1
+
+so that it now appears as
+
+net.ipv4.ip_forward=1
+
+Save the file and run the following command to make the change effective without 
+a reboot.
+
+sudo sysctl -w net.ipv4.ip_forward=1
+/etc/rc.local
+
+You’ll need to allow iptables rules for NAT to work. Edit the file and save it.
+
+sudo vim /etc/rc.local
+
+Make sure the following two lines appear before the exit 0 line in the file.
+
+/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+To make these iptables rules active without rebooting, run the following 
+commands:
+
+sudo iptables -P FORWARD ACCEPT
+
+sudo iptables –-table nat -A POSTROUTING -o eth0 -j MASQUERADE
+Install DHCP server
+
+sudo aptitude install isc-dhcp-server
+/etc/dhcp/dhcpd.conf
+
+Configure your newly installed DHCP server. Edit the file and save.
+
+sudo vim /etc/dhcp/dhcpd.conf
+
+The file is very well commented and you can learn a lot reading it. Just make 
+sure it has at least the following configuration.
+
+ddns-update-style none;
+
+# option definitions common to all supported networks...
+option domain-name "codeghar.com";
+option domain-name-servers 10.20.30.15, 10.20.30.16;
+
+default-lease-time 3600;
+max-lease-time 7200;
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility local7;
+
+# This is a very basic subnet declaration.
+
+subnet 172.22.22.0 netmask 255.255.255.0 {
+  range 172.22.22.21 172.22.22.250;
+  option subnet-mask 255.255.255.0;
+  option broadcast-address 172.22.22.255;
+  option routers 172.22.22.1;
+}
+
+/etc/default/isc-dhcp-server
+
+We want to serve DHCP only on eth1 interface to we need to configure it that 
+way. Edit the file and save it.
+
+sudo vim /etc/default/isc-dhcp-server
+
+The line will look like this before you change it
+
+INTERFACES=""
+
+And after you change it, it will look like this:
+
+INTERFACES="eth1"
+
+Now you should stop and start the DHCP server.
+
+sudo service isc-dhcp-server stop (if the service is already running; skip if 
+it’s not running)
+
+sudo service isc-dhcp-server start
+Conclusion
+
+Now any machines you have on the 172.22.22.0/24 network will get their IP 
+address from Skyray if they are set to DHCP. And Skyray will also serve as 
+their gateway.
+
+Source:
+Gite, V. (2012, November 21). Ubuntu 12.04 ipv4 nat gateway and DHCP server. 
+Code Ghar. Retrieved April 24, 2022, from 
+https://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/ 

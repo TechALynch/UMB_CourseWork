@@ -1,0 +1,6 @@
+All deployed Code at this link!
+
+https://etherscan.io/address/0x4c67b60dff9920cfe0a4975d6b355b5ba097c588#code
+
+Our minting website
+https://namekian-lr95p74mm-wenston7.vercel.app/           

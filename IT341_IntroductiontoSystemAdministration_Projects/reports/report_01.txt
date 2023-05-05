@@ -1,0 +1,169 @@
+Anthony Lynch 
+IT341 - Intro to System Administration 
+report_01
+Project 1 Installing Ubuntu Server on a Virtual Machine.
+Partner: Manny Dolce
+
+---------------------------------------------
+2022-03-01 -- 19:25:43 Project 1 Begin:
+---------------------------------------------
+
++ Throughout the duration of this project, we will be installing Ubuntu 20.04 
+LTS Server on our VMware virtual machine. 
+	- We were assigned it25 as our physical machine workstation and itvm25-2b as 
+	the virtual machine Hostname. 
+
++ We started this project off with the creation of the virtual machine on the 
+VMWare Workstation.
+ 	- This was achieved by proceeding through the new virtual machine wizard 
+ 	selecting; The "typical" method for installation, "I will install the 
+ 	operating system later", to install a "Linux" operating system using a 
+ 	"Ubuntu 64 -bit" version. After this we needed to set the default hostname 
+ 	to itvm25-2b and location to the appropriate directory to store our virtual 
+ 	machine: 
+ 		{C:/IT341/section2b} ~ Machine it25
+
++ Next, we formatted the drive.  
+	- To accomplish this we selected "Split virtual disk into multiple files" 
+	with 20 GB of maximum disk size. All of the other hardware defaults were not 
+	customized in this process and left untouched. 
+
++ Then, we loaded our ISO image into our CD/DVD drive. 
+	- This was accomplished by setting the CD/DVD (SATA) to auto-detect and 
+	using a specific file path to source it; 
+		{C:\OS ISOs\Linux\Ubuntu\LTS\Server\ubuntu-20.04.1-live-server-amd64.iso}
+
++ After configuring all of the prerequisites, powering on the machine led to a 
+prompt to start a step-by-step installation process. 
+	- We continued with the following preferences selected; "English" for 
+	language, "Continue without updating", "English (US)" for Layout and Variant
+	, "Use an entire disk", and Unchecking the LVM option. 
+	- Next, we were prompted for our profile setup where we used "sysadmin" as a 
+	USERNAME and "itvm25-2b" as a PASSWORD. 
+	- We let the installer run it's course until it finished and prompted us to 
+	"Reboot now". Once this was finished we removed the ISO from the CD/DVD 
+	drive then rebooted the system. This will prevent it from autobooting upon 
+	restart.
+
+														------END OF CLASS------
+
+---------------------------------------------
+2022-03-03 -- 19:40:59 - Project 1 Continue:
+---------------------------------------------
+
++  At this point we will be finishing up project 1. In order to accomplish this 
+goal today, we will need to check the network and internet connection as well as 
+install specific software. 
+	- After finishing the installation processes we logged in as sysadmin and 
+	started a script file to record the commands and outputs. Now that we logged 
+	in and started a script file, we began to run the ping command with 5 
+	packets to see if we can connect to the outside world. The following command 
+	was executed successfully. 
+		{ping -c 5 www.yahoo.com}
+
++ Now that we ensured that we have a connection to the outside world we need to 
+update and upgrade Ubuntu since we skipped this step in the installation process 
+and because of security and operating system improvements since version 20.04 
+was released. At this point there we need to use the root “superuser do" command 
+in order to have full privileges to alter the operating system's files. 
+	- To do this we entered the following commands; 
+	
+	{sudo systemctl disable apt-daily.service}	
+	~ After inputing sysadmin password this command was executed sucessfully. 
+	
+	{sudo systemctl disable} 
+	~ This command was executed sucessfully.
+	
+	{sudo systemctl disable apt-daily.timer} 
+	~ This command was executed sucessfully.
+	
+	{sudo systemctl disable} 
+	~ This command was executed sucessfully.
+	
+	{sudo apt-get update} 
+	~ This command was executed sucessfully to update the catalog.
+
+	{sudo apt-get upgrade} 
+	~ This command was executed sucessfully after Choosing Y to continue.
+
+	{sudo apt-get install openssh-server} 
+	~ This command was executed sucessfully after Choosing Y to continue.
+
++ With the successful execution of the previous commands, we ended the script 
+file and logged out of the virtual machine. 
+	- At this point, we created our first snapshot titled "Project 1 - Complete."
+	Snapshots are used to represent the Virtual machines state at various 
+	points in time. This Snapshot will be used for the following project as a 
+	restore point to recover our machine whenever necessary, specifically if the
+	 system fails. Our Snapshot was named itvm25-2b-Snapshot1 and it was stored 
+	 in the following location; 
+	{C:/IT341/section2b}
+
+														-----END OF PROJECT-----
+
+---------------------------------------------
+2022-03-03 -- Continue - DISCUSSION Q&A:
+---------------------------------------------
+
+1. What does LTS stand for, and what does that mean? Please
+explain.
+
+	+ LTS stands for long-term support. Here, support means that throughout the 
+	lifetime of a release there is a commitment to update, patch, and maintain 
+	the software. "For an LTS, there is a shorter development cycle, where 
+	engineers and contributors add to the body of the release. And a longer beta
+	 testing cycle, where more testing and bug fixing takes place to focus on a 
+	 release’s performance and stability." Ubuntu is released by Canonical every 
+	 six months, and it's Long Term Support version is released every two years.
+		Source: https://ubuntu.com/blog/what-is-an-ubuntu-lts-release
+
+2. What is an LVM? (It stands for "logical volume manager".)
+Please explain what a logical volume is and what a logical
+volume manager does.
+
+	+ Logical volume management provides a higher-level view of the disk storage
+	 on a computer system than the traditional view of disks and partitions. 
+	 This gives the system administrator much more flexibility in allocating 
+	 storage to applications and users. Storage volumes created under the 
+	 control of the logical volume manager can be resized and moved around 
+	 almost at will, although this may need some upgrading of file system tools.
+	 "The logical volume manager also allows the management of storage volumes 
+	 in user-defined groups, allowing the system administrator to deal with 
+	 sensibly named volume groups." This command can be vary dangerous if not 
+	 used responsibly. 
+		Source: https://tldp.org/HOWTO/LVM-HOWTO/whatisvolman.html
+
+3. Please explain what the Sudo command is, how it is used, and
+why we need it.
+
+	+ The sudo command or "super user do", allows you to run programs with the 
+	security privileges of another user (by default, as the superuser). 
+	It prompts you for your password and confirms your request to execute a 
+	command by checking a file, called sudoers, which the system administrator 
+	configures. "Using the sudoers file, system administrators can give certain 
+	users or groups access to some or all commands without those users having to 
+	know the root password." It also logs all commands and arguments so there is 
+	a record of who used it for what, and when.
+		Source: https://kb.iu.edu/d/amyi
+
+4. Please explain what apt-get is and why we use it.
+
+	+ apt-get is a command-line tool that helps in handling packages in Linux. 
+	It's main task is to retrieve the information and packages from the 
+	authenticated sources for installation, upgrade, and removal of packages 
+	along with their dependencies.
+		Source: https://www.geeksforgeeks.org/apt-get-command-in-linux-with-examples/
+
+5. Please explain what "snapshots" are and why they are useful to
+us.
+
+	+ In computer systems, a snapshot is the state of a system at a particular 
+	point in time. "The term was coined as an analogy to that in photography. 
+	It can refer to an actual copy of the state of a system or a capability 
+	provided by certain systems at a point in time." Snapshots are useful 
+	because they can restore a system from a point in time during an event of 
+	failure or unstableness. This is why they are usful for us. 
+		Source: https://en.wikipedia.org/wiki/Snapshot_(computer_storage)
+
+
+													  --------END OF Q&A--------

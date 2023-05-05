@@ -1,0 +1,251 @@
+Anthony Lynch 
+IT341 - Intro to System Administration 
+report_03
+Project 3 - Administering and Leveraging a Distributed File System 
+Partner: Manny Dolce
+
+
+---------------------------------------------
+2022-05-10 -- Project 3 Start:
+---------------------------------------------
+
+	- My partner Manny and I are beginning to work on project 3 today
+
+	- We began with a lecture by professor in which topics included in the
+	- project were discussed
+
+	- A majority of the work has been completed on the server side by previous
+	- admins and now we will be doing our end of the client work
+
+	- As done in our previous projects, we ran a script called project3_start 
+	before we started with any of the project 3 steps.
+
+		* Which will capture all of the work we do during this project within a 
+		specified file
+
+	- Next, we downloaded and installed the required NFS and auto-mounting 
+	packages
+
+	- Following this, we changed the name of the home directory to out VM team 
+	name ITvm25-2b
+
+	- we then created the mount point in which we called /home
+
+	- After this, we did not receive the error message mentioned in the 
+	instructions but we still logged out of the VM  to ensure we had our home 
+	directory
+
+	- We came across a major error in which we incorrectly edited our file 
+	causing us to be unable to login
+
+	- It took some time but professor was able to recover our file and fix our 
+	issue
+	 ~sysadmin:x:1000:1000:sysadmin,,,:/home.itvm25-2a/sysadmin:/bin/bash
+	 	* This was inputted incorrectly in udo nano /etc/passwd which was the 
+	 	reason to why we could not login
+
+	- We had to make edits to /etc/exports, and /etc/auto.master to  to tell 
+	autofs about the map for /home. We added the following to lines at the end 
+	of each file. 
+		~/home.itvm28-8a 10.0.0.0/24(rw,sync,no_root_squash,no_subtree_check
+		~/home /etc/auto.home
+
+	- After copying all from /etc/auto.home on it20, we want to automount all 
+	homes from all servers so we ran the two following commands; 
+		~sudo service nfs-kernel-server restart
+		~sudo service autofs restart
+		(Both Successful)
+
+	- We than ran ls on our home directory and another users home directory to 
+	view the displayable content of the directory
+																---End Part A---
+
+
+---------------------------------------------
+2022-05-12 -- Project 3 Part B & C:
+---------------------------------------------
+
+	- We resumed working on project 3 today, we met in the lab at 1pm to 
+	complete the reset of this project 
+
+	- Once we logged in, we started a new script to capture each commands. 
+
+	- Continuing through and and observing all that we can do with ssh, scp, 
+	and sftp with key-Based Authentication, we prepared to set up key-based 
+	authentication.
+
+	- We completed this by entering in the following commands in sequence; 
+		aj092000@itvm25-2b:~$ ssh-keygen -t rsa -b 2048
+		Generating public/private rsa key pair.
+		Enter file in which to save the key (/home/aj092000/.ssh/id_rsa):"ENTER"
+		Enter passphrase (empty for no passphrase):"qazxsw"
+		Enter same passphrase again:"qazxsw"
+		Your identification has been saved in /home/aj092000/.ssh/id_rsa. 
+		Your public key has been saved in /home/aj092000/.ssh/id_rsa.pub.
+
+	- After appending the content, we wanted to ssh into another machine to 
+	check if it works. To do this it is important to understand that this only 
+	works assuming that both your VM\ and the target machine have successfully 
+	implemented NFS. 
+
+	- We want to be able to ssh into other machines without having to supply 
+	the passphrase each time. The ssh‐agent utility allows us to do this within 
+	the scope of a single, ongoing login session. We ran the following commands
+	to invoke ssh‐agent with the name of the shell we want to use as its 
+	argument as well as check to see if it works. 
+		~ ssh-agent /bin/bash
+		~ ssh-add
+		~ ssh it20
+		(All Sucessfull)
+																---End Part B---
+	
+
+	- After reading about how we can use rdist to distribute files, in order to 
+	complete the project we also needed to install rdist so we can begin setting
+	up automatic distribution of files to each client. To do this my partner 
+	and I creating the myrdist file and made it an executable by using chmod. 
+
+	- Next we completed an exercise that involved copying /etc to /tmp by 
+	running the following commands. 
+		~cp -r /etc /tmp/etc_copy
+		~ls -l /tmp/etc_copy
+		(Each command was run Successfully by each partner)
+
+																---End Part C---
+
+																
+---------------------------------------------
+2022-05-17 -- Continue - DISCUSSION Q&A:
+---------------------------------------------
+
+1. After you edit /etc/passwd on your VM, you might get an error message to 
+the effect that sysadmin does not have a home directory.
+
+	a. Whether or not you experience this, why could something like that happen?
+
+		- You may receive an error message because this is the default directory
+		that user lands up just after login. By making changes to this it has 
+		effected the current status. 
+	
+	b. After you log sysadmin out -- and then back in -- sysadmin should have a
+	home directory once more. Why would this be the case?
+
+		- Sysadmin should have a home directory once more because when multiple 
+		users login it avoids conflicts by landing in each users respective home 
+		directory. After the change was successful there should be one. 
+
+2. How is mounting other users' homes in this project dependent upon the correct
+configuration of networking and NIS in Project 2?
+
+	- A network information system is a remote-procedure-call-based client-
+	server system that permits a group of machines within an NIS domain to share
+	a common set of configuration files. mounting other users' homes in this 
+	project dependent upon the correct configuration of networking and NIS in 
+	Project 2 because it isa default directory where user lands up after login. 
+
+
+3. When you make changes in your home directory (such as adding, deleting, or
+editing files) while logged into it20 or someone else's VM, why do those changes
+persist in your home directory, as it exists on your own VM?
+
+	- Changes persist in your home directory, as it exists on your own VM 
+	because the virtual machine is where the operating system is hosted in. 
+	Therefore, changes will only reflect in the particular user's home directory
+	.  
+
+4. What differentiates ssh, scp, and sftp from their non-secure counterparts 
+(rsh, rcp, and ftp)? In other words, what makes them "secure"?
+	
+	-ssh allows to login to another, remote machine from your local machine. It 
+	is a secure version of telnet scp allows you to copy a file to or from your 
+	local machine from or to a remote machine. It is a secure version of rcp.
+	sftp stands for Secure File Transfer Protocol sftp is like scp because you 
+	can use it to get files. It is a secure version of ftp. What makes them 
+	"secure" are the fact that they are all encrypted. 
+
+5. In Part II, Step #5, we saw that the example user abird was prompted for a
+passphrase instead of a password. Why does this occur?
+
+	- We set a key-based ssh logins is for more security.
+
+	To give you an additional layer of security you could use a passphrase when 
+	creating your keys. This way, if someone somehow gets a copy of your private
+	key it would be useless to them until they crack the passphrase. This gives 
+	you time to generate a new set of keys and spread the public one to the 
+	servers you connect to. 
+
+6. Using key pairs...
+
+	a. When a user (on his/her local machine) authenticates to a remote host 
+	using a key pair, what are the respective roles of the public and private 
+	keys?
+
+		- When a local machine needs to be authenticated to a remote machine, 
+		two interrelated key pairs are needed to authenticate two systems with 
+		each other. The encryption using one key can only be decrypted only 
+		using the other key, t so if one the key changes, the confirmation will 
+		not take place.
+
+	b. Which keys (public vs. private) must be on which hosts (local vs. remote) 
+	for authentication to take place, and why is this the case?
+
+		- When a user authenticates using his local machine to remote host, the 
+		remote host will be loaded with the public key. Local machines can be 
+		authenticated though the private key stored at the local machine. Since 
+		the key pair is matched only if the matching key pair is there in the 
+		two systems, then only the authentication will happen. 
+
+7. How does NFS-based mounting enable us to create one pair of key files in our 
+home directories – in our .ssh folders – and then be able to log into (and from) 
+any Linux machine within the IT Lab LAN?
+
+	- A Network File System (NFS) allows remote hosts to mount file systems over 
+	a network and interact with those file systems as though they are mounted 
+	locally. This enables system administrators to consolidate resources onto 
+	centralized servers on the network hence, IT Lab LAN. We can use ssh-keyhen 
+	command to generate public and private keys and secures it with a passphrase
+	. When entered correctly and connection is validated then a public key of a 
+	generated key pair will be stored on the remote computer so the passphrase 
+	is no longer required. 
+
+8. Identify some of the most important options to the rdist command and explain
+their significance.
+
+	- The rdist command is used to distribute file copies on multiple host. It 
+	maintains the copies of files. Some of the most useful options are the 
+	following; 
+		~rdist -D
+			Enables debugging for file copies 
+
+		~rdist -b
+			Compares the file copies to find differences then updates according 
+			to the master host. 
+
+		~rdist -q
+			Updated files will not be displayed in the output.
+
+		~rdist -v
+			Verifies all updates files on the host.
+
+		~rdist -n
+			Assist in debugging disfiles. 
+
+
+9. If you were going to use rdist to push an update to other machines' /etc
+directories, what are some precautions you can take to ensure that you do not
+accidentally damage/destroy any essential files on those machines?
+
+	- Some precautions you can take to ensure that you do not
+	accidentally damage/destroy any essential files on those machines would 
+	involve creating a master server so that all files can be distributed on the 
+	same one, the use of an SSH command in order to maintain the security and 
+	re-run the rdist command to ensure rdist. 
+
+10.How can ssh-agent make it easier to execute the rdist command?
+
+	- ssh-agents makes the rdist command easier to execute because it monitors 
+	the user identity keys so that it can use them to access the servers without 
+	typing in the passwords again. It also improves efficiency and provides the 
+	security. 
+
+																------END------
